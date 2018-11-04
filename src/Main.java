@@ -25,6 +25,7 @@ public class Main {
 
     public static int windowWidth = 1000;
     public static int windowHeight = 500;
+    static Emitter e;
 
     private static void close() {
         System.exit(0);
@@ -51,9 +52,14 @@ public class Main {
         vb.setAlignment(Pos.CENTER);
         group.getChildren().add(vb);
 
-        Button a = new Button("Nothing here yet");
+        Button up = new Button("Up!");
+        up.setOnAction((ActionEvent) -> e.upSpeed());
+        vb.getChildren().add(up);
 
-        vb.getChildren().add(a);
+        Button down = new Button("Down!");
+        down.setOnAction((ActionEvent) -> e.downSpeed());
+        vb.getChildren().add(down);
+
     }
 
     private static void launch() {
@@ -82,7 +88,7 @@ public class Main {
         gc.setFill(Color.GRAY);
         gc.setFont(new Font("Lucida Sans", 24));
 
-        Emitter e = new Emitter(2, 20, 30, 500);
+        e = new Emitter(2, 20, 10, 500,windowWidth);
         e.generateRings();
 
 
@@ -90,12 +96,14 @@ public class Main {
             private long last = 0;
 
             @Override
-            public void handle(long now) {
-                if (now - last >= 16_000_000) {
+            public void handle(long now)  {
+
                     gc.fillRect(0, 0, windowWidth, windowHeight);
                     e.draw(gc, windowHeight);
                     e.update();
-                }
+                    long b = System.currentTimeMillis();
+                    gc.strokeText(String.valueOf(now-last), 10,34);
+                    last = now;
             }
         };
 

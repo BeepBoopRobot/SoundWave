@@ -25,10 +25,10 @@ public class Ring {
 
     public void reset(int newX) {
         radius = 0;
-        x = newX;
+        this.x = newX;
     }
 
     void update() {
-        this.radius += 0.8;
+        this.radius += 16;
     }
 }
