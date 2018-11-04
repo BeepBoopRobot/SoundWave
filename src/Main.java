@@ -23,9 +23,10 @@ public class Main {
         Platform.runLater(Main::control);
     }
 
-    public static int windowWidth = 1000;
-    public static int windowHeight = 500;
-    static Emitter e;
+    private static boolean doStep = false, stopped = false;
+    private static AnimationTimer at;
+    private static Emitter e;
+
 
     private static void close() {
         System.exit(0);
@@ -60,9 +61,35 @@ public class Main {
         down.setOnAction((ActionEvent) -> e.downSpeed());
         vb.getChildren().add(down);
 
+        Button pause = new Button("Pause");
+        pause.setOnAction((ActionEvent) -> {
+            stopped = true;
+            at.stop();
+        });
+        vb.getChildren().add(pause);
+
+        Button play = new Button("Play");
+        play.setOnAction((ActionEvent) -> {
+            if(doStep) doStep = false;
+            stopped = false;
+            at.start();
+        });
+        vb.getChildren().add(play);
+
+        Button step = new Button("Step");
+        step.setOnAction((ActionEvent) -> {
+            if (stopped) {
+                doStep = true;
+                at.start();
+            }
+        });
+        vb.getChildren().add(step);
     }
 
     private static void launch() {
+        int windowWidth = 1000;
+        int windowHeight = 500;
+
         Stage stage = new Stage();
         stage.setTitle("Doppler Effect Visualisation");
         stage.setWidth(windowWidth);
@@ -88,22 +115,17 @@ public class Main {
         gc.setFill(Color.GRAY);
         gc.setFont(new Font("Lucida Sans", 24));
 
-        e = new Emitter(2, 20, 10, 500,windowWidth);
+        e = new Emitter(2, 20, 34, 500, windowWidth);
         e.generateRings();
 
-
-        AnimationTimer at = new AnimationTimer() {
-            private long last = 0;
+        at = new AnimationTimer() {
 
             @Override
-            public void handle(long now)  {
-
+            public void handle(long now) {
                     gc.fillRect(0, 0, windowWidth, windowHeight);
                     e.draw(gc, windowHeight);
                     e.update();
-                    long b = System.currentTimeMillis();
-                    gc.strokeText(String.valueOf(now-last), 10,34);
-                    last = now;
+                if(doStep) at.stop();
             }
         };
 

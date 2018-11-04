@@ -27,13 +27,13 @@ public class Emitter {
     }
 
     void generateRings() {
-        for (int i = 0; i < rings; i++) {
-            waves.add(new Ring(((double) i / rings) * maxRadius, pos+40));
+        for (int i = 1; i <= rings; i++) {
+            waves.add(new Ring(((double) i / rings) * maxRadius, pos+60));
         }
     }
 
     public void draw(GraphicsContext gc, int h) {
-        gc.drawImage(image, pos + 40, h / 2 - 60, 120, 120);
+        gc.drawImage(image, pos+60, h / 2 - 60, 120, 120);
         for (Ring r : waves) {
             gc.strokeOval(r.getX() - r.getRadius() / 2, h / 2 - r.getRadius() / 2, r.getRadius(), r.getRadius());
         }
