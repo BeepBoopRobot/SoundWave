@@ -119,13 +119,16 @@ public class Main {
         e.generateRings();
 
         at = new AnimationTimer() {
-
+            private long last = 0;
             @Override
             public void handle(long now) {
+                if(now-last >= 16_000_000) {
                     gc.fillRect(0, 0, windowWidth, windowHeight);
                     e.draw(gc, windowHeight);
                     e.update();
-                if(doStep) at.stop();
+                    if (doStep) at.stop();
+                    last = now;
+                }
             }
         };
 
